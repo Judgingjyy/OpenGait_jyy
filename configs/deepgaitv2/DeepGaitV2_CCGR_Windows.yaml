@@ -1,0 +1,92 @@
+data_cfg:
+  dataset_name: CCGR-MINI
+  dataset_root: R:\Datasets\CCGR-MINI
+  dataset_partition: datasets/CCGR-MINI/CCGR-MINI.json
+  num_workers: 0
+  data_in_use:
+  - 2
+  remove_no_gallery: false
+  test_dataset_name: CCGR-MINI
+  cache: false
+evaluator_cfg:
+  enable_float16: true
+  restore_ckpt_strict: true
+  restore_hint: 2000
+  save_name: DGv2_CCGR_Win_2k
+  eval_func: evaluate_CCGR_MINI
+  sampler:
+    batch_shuffle: false
+    batch_size: 1
+    sample_type: all_ordered
+    frames_all_limit: 48
+  metric: euc
+  transform:
+  - type: BaseSilCuttingTransform
+loss_cfg:
+- loss_term_weight: 1.0
+  margin: 0.2
+  type: TripletLoss
+  log_prefix: triplet
+- loss_term_weight: 1.0
+  scale: 16
+  type: CrossEntropyLoss
+  log_prefix: softmax
+  log_accuracy: true
+model_cfg:
+  model: DeepGaitV2
+  Backbone:
+    mode: p3d
+    in_channels: 1
+    layers:
+    - 1
+    - 1
+    - 1
+    - 1
+    channels:
+    - 64
+    - 128
+    - 256
+    - 512
+  SeparateBNNecks:
+    class_num: 571
+optimizer_cfg:
+  lr: 0.03
+  momentum: 0.9
+  solver: SGD
+  weight_decay: 0.0005
+scheduler_cfg:
+  gamma: 0.1
+  milestones:
+  - 1200
+  - 1700
+  scheduler: MultiStepLR
+trainer_cfg:
+  enable_float16: true
+  fix_BN: false
+  with_test: false
+  log_iter: 50  # 
+  restore_ckpt_strict: true
+  restore_hint: 0
+  save_iter: 500 #
+  save_name: DGv2_CCGR_Win_2k
+  sync_BN: false
+  total_iter: 2000 # 总训练step
+  sampler:
+    batch_shuffle: true
+    batch_size:
+    - 2
+    - 2
+    frames_num_fixed: 8
+    frames_skip_num: 2
+    sample_type: fixed_ordered
+    type: TripletSampler
+  transform:
+  - type: Compose
+    trf_cfg:
+    - type: RandomPerspective
+      prob: 0.2
+    - type: BaseSilCuttingTransform
+    - type: RandomHorizontalFlip
+      prob: 0.2
+    - type: RandomRotate
+      prob: 0.2
