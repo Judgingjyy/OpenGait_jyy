@@ -62,7 +62,9 @@ class LossAggregator(nn.Module):
         for k, v in training_feats.items():
             if k in self.losses:
                 loss_func = self.losses[k]
+                ###follow: **v 字典解包
                 loss, info = loss_func(**v)
+                
                 for name, value in info.items():
                     loss_info['scalar/%s/%s' % (k, name)] = value
                 loss = loss.mean() * loss_func.loss_term_weight

@@ -16,6 +16,13 @@ class Baseline(BaseModel):
         self.HPP = HorizontalPoolingPyramid(bin_num=model_cfg['bin_num'])
 
     def forward(self, inputs):
+#         (
+#     ipts,    # 模型输入数据
+#     labs,    # 身份标签
+#     typs,    # 行走条件
+#     vies,    # 视角信息
+#     seqL     # 序列长度信息
+# )
         ipts, labs, _, _, seqL = inputs
 
         sils = ipts[0]

@@ -45,7 +45,7 @@ def run_model(cfgs, training):
     msg_mgr = get_msg_mgr()
     model_cfg = cfgs['model_cfg']
     msg_mgr.log_info(model_cfg)
-    Model = getattr(models, model_cfg['model'])
+    Model = getattr(models, model_cfg['model'])  # 从models模块中找到 model_cfg模块，然后实例化
     model = Model(cfgs, training)
     if training and cfgs['trainer_cfg']['sync_BN']:
         model = nn.SyncBatchNorm.convert_sync_batchnorm(model)
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     if torch.distributed.get_world_size() != torch.cuda.device_count():
         raise ValueError("Expect number of available GPUs({}) equals to the world size({}).".format(
             torch.cuda.device_count(), torch.distributed.get_world_size()))
-    cfgs = config_loader(opt.cfgs)
+    cfgs = config_loader(opt.cfgs) #读取yaml转化为python字典
     if opt.iter != 0:
         cfgs['evaluator_cfg']['restore_hint'] = int(opt.iter)
         cfgs['trainer_cfg']['restore_hint'] = int(opt.iter)

@@ -1,7 +1,7 @@
 data_cfg:
   dataset_name: SUSTech1K
   dataset_root: your_path_of_SUSTech1K-Released-pkl
-  dataset_partition: ./datasets/SUSTech1K/SUSTech1K.json
+  dataset_partition: ./datasets/SUSTech1K/SUSTech1K.json  # participants
   num_workers: 4
   data_in_use: [false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
   remove_no_gallery: false # Remove probe if no gallery for it
